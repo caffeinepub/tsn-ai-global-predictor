@@ -16,9 +16,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["'Barlow Condensed'", "Barlow", "sans-serif"],
-        body: ["Barlow", "system-ui", "sans-serif"],
-        score: ["'DM Mono'", "monospace"],
+        heading: ["'Rajdhani'", "'Space Grotesk'", "sans-serif"],
+        body: ["'Space Grotesk'", "system-ui", "sans-serif"],
+        mono: ["'Space Mono'", "monospace"],
       },
       colors: {
         border: "oklch(var(--border))",
@@ -71,18 +71,18 @@ export default {
           border: "oklch(var(--sidebar-border))",
           ring: "oklch(var(--sidebar-ring))",
         },
-        sport: {
-          bg: "oklch(var(--sport-bg))",
-          card: "oklch(var(--sport-card))",
-          surface: "oklch(var(--sport-surface))",
-          primary: "oklch(var(--sport-primary))",
-          accent: "oklch(var(--sport-accent))",
-          live: "oklch(var(--sport-live))",
-          success: "oklch(var(--sport-success))",
-          border: "oklch(var(--sport-border))",
-          text: "oklch(var(--sport-text))",
-          muted: "oklch(var(--sport-muted))",
-          nav: "oklch(var(--sport-nav))",
+        ai: {
+          bg: "oklch(var(--ai-bg))",
+          card: "oklch(var(--ai-card))",
+          surface: "oklch(var(--ai-surface))",
+          primary: "oklch(var(--ai-primary))",
+          accent: "oklch(var(--ai-accent))",
+          success: "oklch(var(--ai-success))",
+          warning: "oklch(var(--ai-warning))",
+          border: "oklch(var(--ai-border))",
+          text: "oklch(var(--ai-text))",
+          muted: "oklch(var(--ai-muted))",
+          nav: "oklch(var(--ai-nav))",
         },
       },
       borderRadius: {
@@ -94,9 +94,10 @@ export default {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgba(0,0,0,0.05)",
-        sport: "0 4px 24px rgba(0,0,0,0.3)",
-        "sport-glow": "0 0 20px oklch(0.6 0.25 255 / 0.3)",
-        "live-glow": "0 0 12px oklch(0.62 0.26 27 / 0.5)",
+        ai: "0 4px 24px rgba(0,0,0,0.3)",
+        "ai-glow": "0 0 20px oklch(0.58 0.22 254 / 0.35)",
+        "ai-glow-lg": "0 0 40px oklch(0.58 0.22 254 / 0.5)",
+        "cyan-glow": "0 0 20px oklch(0.68 0.18 200 / 0.35)",
       },
       keyframes: {
         "accordion-down": {
@@ -107,14 +108,6 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "live-pulse": {
-          "0%, 100%": { opacity: "1", transform: "scale(1)" },
-          "50%": { opacity: "0.5", transform: "scale(1.2)" },
-        },
-        "bar-grow": {
-          from: { width: "0%" },
-          to: { width: "var(--target-w)" },
-        },
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
@@ -123,23 +116,32 @@ export default {
           from: { transform: "translateY(20px)", opacity: "0" },
           to: { transform: "translateY(0)", opacity: "1" },
         },
-        "notif-slide": {
-          from: { transform: "translateY(-100%)", opacity: "0" },
-          to: { transform: "translateY(0)", opacity: "1" },
-        },
         "fade-in": {
           from: { opacity: "0" },
           to: { opacity: "1" },
+        },
+        "splash-scale": {
+          from: { opacity: "0", transform: "scale(0.8)" },
+          to: { opacity: "1", transform: "scale(1)" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 20px oklch(0.58 0.22 254 / 0.3)" },
+          "50%": { boxShadow: "0 0 40px oklch(0.58 0.22 254 / 0.6), 0 0 60px oklch(0.68 0.18 200 / 0.3)" },
+        },
+        "typing-bounce": {
+          "0%, 100%": { transform: "translateY(0)", opacity: "0.5" },
+          "50%": { transform: "translateY(-5px)", opacity: "1" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "live-pulse": "live-pulse 1.5s ease-in-out infinite",
         shimmer: "shimmer 1.5s infinite",
         "slide-up": "slide-up 0.3s ease forwards",
-        "notif-slide": "notif-slide 0.4s ease forwards",
         "fade-in": "fade-in 0.25s ease forwards",
+        "splash-scale": "splash-scale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
+        "typing-bounce": "typing-bounce 1.2s ease-in-out infinite",
       },
     },
   },

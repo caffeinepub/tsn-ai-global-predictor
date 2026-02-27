@@ -23,6 +23,13 @@ export interface MatchSummary {
     matchId: string;
     keyMoments: string;
 }
+export interface PlayerStats {
+    recentForm: Array<bigint>;
+    average: number;
+    matchesPlayed: bigint;
+    runsGoalsPoints: bigint;
+}
+export type Time = bigint;
 export interface FantasySuggestion {
     captainName: string;
     viceCaptainId: string;
@@ -33,7 +40,6 @@ export interface FantasySuggestion {
     suggestedPlayers: Array<[string, string]>;
     captainId: string;
 }
-export type Time = bigint;
 export interface Match {
     id: string;
     status: MatchStatus;
@@ -72,16 +78,23 @@ export interface NewsArticle {
     sport: Sport;
     imageUrl: string;
 }
+export interface ChatMessage {
+    id: string;
+    content: string;
+    role: string;
+    timestamp: bigint;
+    toolUsed: string;
+}
 export interface UserProfile {
     favoriteSport?: Sport;
     name: string;
     favoriteTeam?: string;
 }
-export interface PlayerStats {
-    recentForm: Array<bigint>;
-    average: number;
-    matchesPlayed: bigint;
-    runsGoalsPoints: bigint;
+export interface MotivationalQuote {
+    id: string;
+    quoteText: string;
+    author: string;
+    category: string;
 }
 export enum MatchStatus {
     upcoming = "upcoming",
@@ -106,7 +119,9 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
+    addQuote(quote: MotivationalQuote): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    clearChatHistory(): Promise<void>;
     createFantasySuggestion(suggestion: FantasySuggestion): Promise<void>;
     createMatch(match: Match): Promise<void>;
     createNews(article: NewsArticle): Promise<void>;
@@ -119,8 +134,11 @@ export interface backendInterface {
     getAllMatches(): Promise<Array<Match>>;
     getAllNews(): Promise<Array<NewsArticle>>;
     getAllPlayers(): Promise<Array<Player>>;
+    getAllQuotes(): Promise<Array<MotivationalQuote>>;
+    getCallerMessageCount(): Promise<bigint>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getChatHistory(): Promise<Array<ChatMessage>>;
     getFantasySuggestionByMatchId(matchId: string): Promise<FantasySuggestion | null>;
     getMatchesBySport(sport: Sport): Promise<Array<Match>>;
     getMatchesByStatus(status: MatchStatus): Promise<Array<Match>>;
@@ -132,6 +150,7 @@ export interface backendInterface {
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    saveChatMessage(msg: ChatMessage): Promise<void>;
     updateFantasySuggestion(suggestion: FantasySuggestion): Promise<void>;
     updateMatch(match: Match): Promise<void>;
     updateNews(article: NewsArticle): Promise<void>;

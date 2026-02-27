@@ -2,109 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Light mode — clean white with vivid blue */
-    --background: 0.97 0.005 250;
-    --foreground: 0.12 0.02 260;
+    /* Light mode */
+    --background: 0.96 0.01 250;
+    --foreground: 0.1 0.02 260;
     --card: 1 0 0;
-    --card-foreground: 0.12 0.02 260;
+    --card-foreground: 0.1 0.02 260;
     --popover: 1 0 0;
-    --popover-foreground: 0.12 0.02 260;
-    --primary: 0.52 0.22 260;
+    --popover-foreground: 0.1 0.02 260;
+    --primary: 0.55 0.22 254;
     --primary-foreground: 0.98 0 0;
-    --secondary: 0.94 0.01 250;
+    --secondary: 0.92 0.02 250;
     --secondary-foreground: 0.2 0.02 260;
-    --muted: 0.94 0.01 250;
+    --muted: 0.92 0.015 250;
     --muted-foreground: 0.5 0.05 255;
-    --accent: 0.6 0.2 230;
+    --accent: 0.68 0.18 200;
     --accent-foreground: 0.98 0 0;
     --destructive: 0.59 0.24 27;
     --destructive-foreground: 0.98 0 0;
-    --border: 0.88 0.02 255;
-    --input: 0.88 0.02 255;
-    --ring: 0.52 0.22 260;
-    --chart-1: 0.52 0.22 260;
-    --chart-2: 0.7 0.2 180;
+    --border: 0.87 0.02 255;
+    --input: 0.87 0.02 255;
+    --ring: 0.55 0.22 254;
+    --chart-1: 0.55 0.22 254;
+    --chart-2: 0.68 0.18 200;
     --chart-3: 0.65 0.22 40;
     --chart-4: 0.6 0.2 140;
     --chart-5: 0.59 0.24 27;
-    --sidebar: 0.98 0 0;
-    --sidebar-foreground: 0.12 0.02 260;
-    --sidebar-primary: 0.52 0.22 260;
+    --sidebar: 0.97 0.01 250;
+    --sidebar-foreground: 0.1 0.02 260;
+    --sidebar-primary: 0.55 0.22 254;
     --sidebar-primary-foreground: 0.98 0 0;
-    --sidebar-accent: 0.94 0.01 250;
+    --sidebar-accent: 0.92 0.02 250;
     --sidebar-accent-foreground: 0.2 0.02 260;
-    --sidebar-border: 0.88 0.02 255;
-    --sidebar-ring: 0.52 0.22 260;
+    --sidebar-border: 0.87 0.02 255;
+    --sidebar-ring: 0.55 0.22 254;
 
-    /* Sports app custom tokens */
-    --sport-bg: 0.97 0.005 250;
-    --sport-card: 1 0 0;
-    --sport-surface: 0.95 0.01 255;
-    --sport-primary: 0.52 0.22 260;
-    --sport-accent: 0.65 0.22 215;
-    --sport-live: 0.59 0.24 27;
-    --sport-success: 0.62 0.2 145;
-    --sport-border: 0.88 0.02 255;
-    --sport-text: 0.12 0.02 260;
-    --sport-muted: 0.5 0.05 255;
-    --sport-nav: 1 0 0;
-    --sport-nav-border: 0.88 0.02 255;
+    /* AI Assistant custom tokens */
+    --ai-bg: 0.96 0.01 250;
+    --ai-card: 1 0 0;
+    --ai-surface: 0.93 0.015 255;
+    --ai-primary: 0.55 0.22 254;
+    --ai-accent: 0.68 0.18 200;
+    --ai-success: 0.62 0.2 145;
+    --ai-warning: 0.72 0.18 55;
+    --ai-border: 0.87 0.02 255;
+    --ai-text: 0.1 0.02 260;
+    --ai-muted: 0.5 0.05 255;
+    --ai-nav: 1 0 0;
+    --ai-nav-border: 0.87 0.02 255;
+    --ai-bubble-user: 0.55 0.22 254;
+    --ai-bubble-ai: 0.93 0.015 255;
   }
 
   .dark {
-    /* Dark mode — stadium night broadcast */
-    --background: 0.1 0.015 265;
+    /* Dark mode — electric night */
+    --background: 0.07 0.015 250;
     --foreground: 0.95 0.01 250;
-    --card: 0.14 0.02 265;
+    --card: 0.12 0.02 250;
     --card-foreground: 0.95 0.01 250;
-    --popover: 0.17 0.025 265;
+    --popover: 0.15 0.025 250;
     --popover-foreground: 0.95 0.01 250;
-    --primary: 0.6 0.25 255;
+    --primary: 0.58 0.22 254;
     --primary-foreground: 0.98 0 0;
-    --secondary: 0.18 0.025 265;
+    --secondary: 0.17 0.025 250;
     --secondary-foreground: 0.85 0.01 255;
-    --muted: 0.18 0.025 265;
+    --muted: 0.17 0.025 250;
     --muted-foreground: 0.55 0.04 255;
-    --accent: 0.65 0.22 215;
+    --accent: 0.68 0.18 200;
     --accent-foreground: 0.98 0 0;
     --destructive: 0.55 0.24 27;
     --destructive-foreground: 0.98 0 0;
-    --border: 0.22 0.04 265;
-    --input: 0.22 0.04 265;
-    --ring: 0.6 0.25 255;
-    --chart-1: 0.6 0.25 255;
-    --chart-2: 0.7 0.2 180;
+    --border: 0.22 0.03 250;
+    --input: 0.22 0.03 250;
+    --ring: 0.58 0.22 254;
+    --chart-1: 0.58 0.22 254;
+    --chart-2: 0.68 0.18 200;
     --chart-3: 0.65 0.22 40;
     --chart-4: 0.62 0.2 145;
     --chart-5: 0.55 0.24 27;
-    --sidebar: 0.14 0.02 265;
+    --sidebar: 0.12 0.02 250;
     --sidebar-foreground: 0.95 0.01 250;
-    --sidebar-primary: 0.6 0.25 255;
+    --sidebar-primary: 0.58 0.22 254;
     --sidebar-primary-foreground: 0.98 0 0;
-    --sidebar-accent: 0.18 0.025 265;
+    --sidebar-accent: 0.17 0.025 250;
     --sidebar-accent-foreground: 0.85 0.01 255;
-    --sidebar-border: 0.22 0.04 265;
-    --sidebar-ring: 0.6 0.25 255;
+    --sidebar-border: 0.22 0.03 250;
+    --sidebar-ring: 0.58 0.22 254;
 
-    /* Sports app custom dark tokens */
-    --sport-bg: 0.1 0.015 265;
-    --sport-card: 0.14 0.02 265;
-    --sport-surface: 0.17 0.025 265;
-    --sport-primary: 0.6 0.25 255;
-    --sport-accent: 0.65 0.22 215;
-    --sport-live: 0.62 0.26 27;
-    --sport-success: 0.62 0.2 145;
-    --sport-border: 0.22 0.04 265;
-    --sport-text: 0.95 0.01 250;
-    --sport-muted: 0.55 0.04 255;
-    --sport-nav: 0.12 0.02 265;
-    --sport-nav-border: 0.22 0.04 265;
+    /* AI Assistant dark custom tokens */
+    --ai-bg: 0.07 0.015 250;
+    --ai-card: 0.12 0.02 250;
+    --ai-surface: 0.17 0.025 250;
+    --ai-primary: 0.58 0.22 254;
+    --ai-accent: 0.68 0.18 200;
+    --ai-success: 0.62 0.2 145;
+    --ai-warning: 0.72 0.18 55;
+    --ai-border: 0.22 0.03 250;
+    --ai-text: 0.95 0.01 250;
+    --ai-muted: 0.55 0.04 255;
+    --ai-nav: 0.09 0.02 250;
+    --ai-nav-border: 0.22 0.03 250;
+    --ai-bubble-user: 0.58 0.22 254;
+    --ai-bubble-ai: 0.14 0.025 250;
   }
 
   * {
@@ -114,7 +118,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Barlow', system-ui, sans-serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overscroll-behavior: none;
@@ -126,36 +130,22 @@
 }
 
 @layer components {
-  /* Sport app container */
+  /* App container */
   .app-container {
     max-width: 430px;
     margin: 0 auto;
     min-height: 100dvh;
     position: relative;
     overflow-x: hidden;
-    background-color: oklch(var(--sport-bg));
+    background-color: oklch(var(--ai-bg));
   }
 
-  /* Barlow Condensed for headings */
+  /* Font aliases */
   .font-heading {
-    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-family: 'Rajdhani', 'Space Grotesk', sans-serif;
   }
-
-  /* DM Mono for scores */
-  .font-score {
-    font-family: 'DM Mono', monospace;
-  }
-
-  /* Score display */
-  .score-text {
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-  }
-
-  /* Live pulse animation */
-  .live-pulse {
-    animation: live-glow 1.5s ease-in-out infinite;
+  .font-mono-ai {
+    font-family: 'Space Mono', monospace;
   }
 
   /* Bottom nav */
@@ -166,130 +156,114 @@
     transform: translateX(-50%);
     width: 100%;
     max-width: 430px;
-    background-color: oklch(var(--sport-nav) / 0.96);
-    border-top: 1px solid oklch(var(--sport-nav-border));
-    backdrop-filter: blur(16px) saturate(1.4);
-    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    background-color: oklch(var(--ai-nav) / 0.97);
+    border-top: 1px solid oklch(var(--ai-nav-border));
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
     z-index: 100;
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    box-shadow: 0 -8px 32px oklch(0 0 0 / 0.4), 0 -1px 0 oklch(var(--sport-primary) / 0.08);
+    box-shadow: 0 -8px 40px oklch(0 0 0 / 0.5), 0 -1px 0 oklch(var(--ai-primary) / 0.12);
   }
 
-  /* Nav button active pill */
-  .nav-btn-active-pill {
-    background: linear-gradient(135deg, oklch(var(--primary) / 0.18), oklch(var(--accent) / 0.12));
-    border-radius: 12px;
-    box-shadow: 0 0 14px oklch(var(--primary) / 0.25);
-  }
-
-  /* Card hover lift */
-  .card-hover {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .card-hover:hover {
-    transform: translateY(-2px);
-  }
-  .card-hover:active {
-    transform: translateY(0);
-  }
-
-  /* Sport pill */
-  .sport-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 600;
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    border: 1px solid transparent;
-  }
-
-  /* Page transition */
-  .page-fade {
-    animation: pageFadeIn 0.25s ease forwards;
-  }
-
-  /* Probability bar */
-  .prob-bar {
-    height: 8px;
-    border-radius: 4px;
-    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Skeleton shimmer */
-  .skeleton-shimmer {
-    background: linear-gradient(
-      90deg,
-      oklch(var(--sport-card)) 25%,
-      oklch(var(--sport-surface)) 50%,
-      oklch(var(--sport-card)) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
-
-  /* Gradient text */
-  .gradient-text {
-    background: linear-gradient(135deg, oklch(0.65 0.25 255), oklch(0.7 0.2 215));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Glow effect for active nav items */
-  .nav-glow {
-    filter: drop-shadow(0 0 6px oklch(0.6 0.25 255 / 0.8));
-  }
-
-  /* Scrollable container without bottom nav overlay */
+  /* Scroll content area */
   .scroll-content {
     padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
     height: 100dvh;
   }
 
-  /* Match card angled design */
-  .match-card {
-    position: relative;
-    overflow: hidden;
-  }
-  .match-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -20px;
-    width: 60px;
-    height: 100%;
-    background: linear-gradient(135deg, transparent 50%, oklch(var(--sport-primary) / 0.05) 50%);
-    pointer-events: none;
+  /* Chat bubble base */
+  .chat-bubble-user {
+    background: linear-gradient(135deg, oklch(var(--ai-primary)), oklch(var(--ai-accent)));
+    color: oklch(0.98 0 0);
+    border-radius: 20px 20px 4px 20px;
+    padding: 10px 14px;
+    max-width: 78%;
+    word-break: break-word;
   }
 
-  /* Team initial circle */
-  .team-circle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .chat-bubble-ai {
+    background-color: oklch(var(--ai-bubble-ai));
+    border-left: 3px solid oklch(var(--ai-primary));
+    color: oklch(var(--ai-text));
+    border-radius: 4px 20px 20px 20px;
+    padding: 10px 14px;
+    max-width: 82%;
+    word-break: break-word;
+  }
+
+  /* Nav active glow */
+  .nav-glow {
+    filter: drop-shadow(0 0 6px oklch(var(--ai-primary) / 0.8));
+  }
+
+  /* Card hover */
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+  }
+  .card-hover:active {
+    transform: scale(0.98);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, oklch(0.65 0.22 254), oklch(0.72 0.18 200));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Page fade */
+  .page-fade {
+    animation: pageFadeIn 0.3s ease forwards;
+  }
+
+  /* Typing dots */
+  .typing-dot {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
+    background-color: oklch(var(--ai-primary));
+    animation: typingBounce 1.2s ease-in-out infinite;
+  }
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
   }
 
-  /* Admin panel */
-  .admin-panel-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    background-color: oklch(0 0 0 / 0.7);
-    backdrop-filter: blur(4px);
+  /* Tool card */
+  .tool-card {
+    background-color: oklch(var(--ai-card));
+    border: 1px solid oklch(var(--ai-border));
+    border-radius: 16px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .tool-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px oklch(0 0 0 / 0.2);
+  }
+  .tool-card:active {
+    transform: scale(0.97);
+  }
+
+  /* Skeleton shimmer */
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      oklch(var(--ai-card)) 25%,
+      oklch(var(--ai-surface)) 50%,
+      oklch(var(--ai-card)) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
   }
 }
 
@@ -298,38 +272,20 @@
     min-height: 44px;
     min-width: 44px;
   }
-
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom, 16px);
   }
 }
 
-/* Live badge strong pulse */
-.live-badge-pulse {
-  animation: live-badge 1.8s ease-in-out infinite;
-}
-
 /* Keyframes */
-@keyframes live-badge {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.0);
-  }
-  40% {
-    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15), 0 0 12px rgba(239, 68, 68, 0.25);
-  }
-  60% {
-    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.08);
-  }
-}
-
-@keyframes live-glow {
-  0%, 100% { opacity: 1; box-shadow: 0 0 6px oklch(0.62 0.26 27); }
-  50% { opacity: 0.6; box-shadow: 0 0 12px oklch(0.62 0.26 27); }
-}
-
 @keyframes pageFadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes typingBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(-5px); opacity: 1; }
 }
 
 @keyframes shimmer {
@@ -337,27 +293,32 @@
   100% { background-position: 200% 0; }
 }
 
-@keyframes pulse-dot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.6; }
-}
-
-@keyframes bar-grow {
-  from { width: 0%; }
-  to { width: var(--target-width); }
-}
-
 @keyframes slideUp {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-@keyframes notifSlide {
-  from { transform: translateY(-100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes splashFadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-/* Scrollbar styling */
+@keyframes splashTextIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px oklch(0.58 0.22 254 / 0.3); }
+  50% { box-shadow: 0 0 40px oklch(0.58 0.22 254 / 0.6), 0 0 60px oklch(0.68 0.18 200 / 0.3); }
+}
+
+@keyframes spinRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -366,6 +327,6 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(var(--sport-border));
+  background: oklch(var(--ai-border));
   border-radius: 2px;
 }

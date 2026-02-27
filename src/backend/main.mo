@@ -1,8 +1,8 @@
 import Array "mo:core/Array";
-import Order "mo:core/Order";
 import Map "mo:core/Map";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
+import Order "mo:core/Order";
 import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
 import AccessControl "authorization/access-control";
@@ -10,25 +10,9 @@ import MixinAuthorization "authorization/MixinAuthorization";
 
 actor {
   // Types
-  type Sport = {
-    #cricket;
-    #football;
-    #kabaddi;
-    #basketball;
-    #tennis;
-  };
-
-  type MatchStatus = {
-    #upcoming;
-    #live;
-    #completed;
-  };
-
-  type PredictionConfidence = {
-    #low;
-    #medium;
-    #high;
-  };
+  type Sport = { #cricket; #football; #kabaddi; #basketball; #tennis };
+  type MatchStatus = { #upcoming; #live; #completed };
+  type PredictionConfidence = { #low; #medium; #high };
 
   type PlayerStats = {
     matchesPlayed : Nat;
@@ -156,6 +140,28 @@ actor {
     favoriteTeam : ?Text;
   };
 
+  // AI Assistant Types
+  public type ChatMessage = {
+    id : Text;
+    role : Text;
+    content : Text;
+    timestamp : Int;
+    toolUsed : Text;
+  };
+
+  public type MotivationalQuote = {
+    id : Text;
+    quoteText : Text;
+    author : Text;
+    category : Text;
+  };
+
+  module MotivationalQuote {
+    public func compare(a : MotivationalQuote, b : MotivationalQuote) : Order.Order {
+      Text.compare(a.id, b.id);
+    };
+  };
+
   // Storage
   let matches = Map.empty<Text, Match>();
   let news = Map.empty<Text, NewsArticle>();
@@ -165,6 +171,9 @@ actor {
   let summaries = Map.empty<Text, MatchSummary>();
   let notifications = Map.empty<Text, Notification>();
   let userProfiles = Map.empty<Principal, UserProfile>();
+
+  let chatMessages = Map.empty<Principal, [ChatMessage]>();
+  let quotes = Map.empty<Text, MotivationalQuote>();
 
   // Access Control
   let accessControlState = AccessControl.initState();
@@ -356,10 +365,75 @@ actor {
     let allNotifications = notifications.values().toArray();
     let len = allNotifications.size();
 
-    if (len <= 20) {
-      return allNotifications;
-    };
+    if (len <= 20) { return allNotifications };
 
     allNotifications.sliceToArray(0, 20);
+  };
+
+  // AI Assistant Functions
+  public shared ({ caller }) func saveChatMessage(msg : ChatMessage) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can save chat messages");
+    };
+
+    let currentMessages = switch (chatMessages.get(caller)) {
+      case (null) { [] };
+      case (?msgs) { msgs };
+    };
+
+    let newMessages =
+      if (currentMessages.size() >= 100) {
+        let filtered = currentMessages.sliceToArray(1, currentMessages.size() - 1);
+        filtered.concat([msg]);
+      } else {
+        currentMessages.concat([msg]);
+      };
+
+    chatMessages.add(caller, newMessages);
+  };
+
+  public query ({ caller }) func getChatHistory() : async [ChatMessage] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can access chat history");
+    };
+
+    switch (chatMessages.get(caller)) {
+      case (null) { [] };
+      case (?msgs) {
+        if (msgs.size() <= 50) { return msgs };
+        msgs.sliceToArray(msgs.size() - 50, 50);
+      };
+    };
+  };
+
+  public shared ({ caller }) func clearChatHistory() : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can clear chat history");
+    };
+
+    chatMessages.remove(caller);
+  };
+
+  public shared ({ caller }) func addQuote(quote : MotivationalQuote) : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can add quotes");
+    };
+
+    quotes.add(quote.id, quote);
+  };
+
+  public query func getAllQuotes() : async [MotivationalQuote] {
+    quotes.values().toArray().sort();
+  };
+
+  public query ({ caller }) func getCallerMessageCount() : async Nat {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can access message count");
+    };
+
+    switch (chatMessages.get(caller)) {
+      case (null) { 0 };
+      case (?msgs) { msgs.size() };
+    };
   };
 };

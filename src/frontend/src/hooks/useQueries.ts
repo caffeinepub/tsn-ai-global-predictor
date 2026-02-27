@@ -9,6 +9,8 @@ import type {
   MatchSummary,
   Notification,
   UserProfile,
+  ChatMessage,
+  MotivationalQuote,
 } from "../backend.d";
 import { Sport, MatchStatus, UserRole } from "../backend.d";
 
@@ -367,5 +369,69 @@ export function useSaveProfile() {
       return actor.saveCallerUserProfile(profile);
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["userProfile"] }),
+  });
+}
+
+// ---- Chat ----
+export function useChatHistory() {
+  const { actor, isFetching } = useActor();
+  return useQuery<ChatMessage[]>({
+    queryKey: ["chatHistory"],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getChatHistory();
+    },
+    enabled: !!actor && !isFetching,
+    staleTime: 0,
+  });
+}
+
+export function useSaveChatMessage() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (msg: ChatMessage) => {
+      if (!actor) throw new Error("No actor");
+      return actor.saveChatMessage(msg);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["chatHistory"] }),
+  });
+}
+
+export function useClearChatHistory() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      if (!actor) throw new Error("No actor");
+      return actor.clearChatHistory();
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["chatHistory"] }),
+  });
+}
+
+// ---- Quotes ----
+export function useAllQuotes() {
+  const { actor, isFetching } = useActor();
+  return useQuery<MotivationalQuote[]>({
+    queryKey: ["quotes"],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllQuotes();
+    },
+    enabled: !!actor && !isFetching,
+    staleTime: Infinity,
+  });
+}
+
+export function useAddQuote() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (quote: MotivationalQuote) => {
+      if (!actor) throw new Error("No actor");
+      return actor.addQuote(quote);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["quotes"] }),
   });
 }

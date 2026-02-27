@@ -1,277 +1,446 @@
-import React, { useState } from "react";
-import { Moon, Sun, Bell, Shield, LogOut, LogIn, ChevronRight, BarChart2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import {
+  Settings, Moon, Sun, Bell, Info, LogOut,
+  Star, Zap, Shield, MessageSquare, Wrench, Flame
+} from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { useUserProfile, useIsAdmin, useAllPlayers } from "../hooks/useQueries";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
-import { getSportLabel, getSportIcon, ALL_SPORTS } from "../utils/helpers";
-import { Sport } from "../backend.d";
-import { PlayerAnalytics } from "./PlayerAnalytics";
-import { AdminPanel } from "./AdminPanel";
+import { useActor } from "../hooks/useActor";
 
 interface ProfileTabProps {
   isDark: boolean;
   onThemeToggle: () => void;
+  onLogout: () => void;
 }
 
-export function ProfileTab({ isDark, onThemeToggle }: ProfileTabProps) {
-  const { data: profile } = useUserProfile();
-  const { data: isAdmin } = useIsAdmin();
-  const { data: players = [] } = useAllPlayers();
-  const { identity, login, clear, isLoggingIn, isInitializing } = useInternetIdentity();
-
-  const [adminOpen, setAdminOpen] = useState(false);
-  const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
-  const [notifMatchAlerts, setNotifMatchAlerts] = useState(true);
-  const [notifScoreUpdates, setNotifScoreUpdates] = useState(true);
-  const [notifPredictions, setNotifPredictions] = useState(false);
-
-  const principal = identity?.getPrincipal().toString();
-  const displayName = profile?.name || (principal ? `${principal.substring(0, 8)}...` : "Guest User");
-  const initials = displayName.substring(0, 2).toUpperCase();
-  const isLoggedIn = !!identity;
-
-  const selectedPlayer = players.find((p) => p.id === selectedPlayerId);
+function SettingsSheet({ onClose, isDark, onThemeToggle }: {
+  onClose: () => void;
+  isDark: boolean;
+  onThemeToggle: () => void;
+}) {
+  const [notifMatches, setNotifMatches] = useState(true);
+  const [notifStocks, setNotifStocks] = useState(false);
+  const [notifDaily, setNotifDaily] = useState(true);
 
   return (
-    <div className="page-fade">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-sport-nav/95 backdrop-blur-sm border-b border-sport-border px-4 py-3">
-        <h1
-          className="font-heading font-black text-sport-text"
-          style={{ fontSize: "1.25rem", letterSpacing: "0.06em" }}
-        >
-          PROFILE
-        </h1>
-      </header>
+    <Sheet open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <SheetContent
+        side="bottom"
+        style={{
+          background: "oklch(var(--ai-card))",
+          border: "1px solid oklch(var(--ai-border))",
+          borderRadius: "24px 24px 0 0",
+          maxHeight: "80vh",
+          overflowY: "auto",
+          padding: "20px",
+          maxWidth: 430,
+          margin: "0 auto",
+        }}
+      >
+        <SheetHeader style={{ marginBottom: 20 }}>
+          <SheetTitle style={{ color: "oklch(var(--ai-text))", fontFamily: "'Rajdhani', sans-serif", fontSize: 20 }}>
+            Settings
+          </SheetTitle>
+        </SheetHeader>
 
-      <div className="px-4 py-4 space-y-4">
-        {/* User Card */}
-        <div
-          className="rounded-2xl p-5"
-          style={{
-            background: "linear-gradient(135deg, oklch(0.14 0.04 265), oklch(0.18 0.08 255))",
-            border: "1px solid oklch(0.28 0.06 265)",
-          }}
-        >
-          <div className="flex items-center gap-4">
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          {/* Appearance */}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "oklch(var(--ai-muted))", margin: "0 0 8px" }}>
+            Appearance
+          </p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid oklch(var(--ai-border))" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {isDark ? <Moon size={18} style={{ color: "oklch(0.68 0.18 200)" }} /> : <Sun size={18} style={{ color: "oklch(0.72 0.18 55)" }} />}
+              <span style={{ fontSize: 14, color: "oklch(var(--ai-text))" }}>Dark Mode</span>
+            </div>
+            <Switch checked={isDark} onCheckedChange={onThemeToggle} />
+          </div>
+
+          {/* Notifications */}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "oklch(var(--ai-muted))", margin: "16px 0 8px" }}>
+            Notifications
+          </p>
+          {[
+            { label: "Match alerts", value: notifMatches, set: setNotifMatches },
+            { label: "Stock updates", value: notifStocks, set: setNotifStocks },
+            { label: "Daily motivation", value: notifDaily, set: setNotifDaily },
+          ].map((item) => (
             <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-heading font-black text-white"
-              style={{
-                background: "linear-gradient(135deg, #1d4ed8, #0ea5e9)",
-                boxShadow: "0 0 24px rgba(59,130,246,0.3)",
-              }}
+              key={item.label}
+              style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid oklch(var(--ai-border))" }}
             >
-              {initials}
+              <span style={{ fontSize: 14, color: "oklch(var(--ai-text))" }}>{item.label}</span>
+              <Switch checked={item.value} onCheckedChange={item.set} />
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-heading font-black text-lg text-white truncate">{displayName}</p>
-              {isAdmin && (
-                <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 font-heading font-bold mt-1">
-                  <Shield size={10} /> ADMIN
-                </span>
-              )}
-              {!isAdmin && isLoggedIn && (
-                <span className="text-xs text-blue-400 font-heading">Logged in</span>
-              )}
-              {!isLoggedIn && (
-                <span className="text-xs text-sport-muted font-heading">Not logged in</span>
-              )}
-            </div>
+          ))}
+
+          {/* App Info */}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "oklch(var(--ai-muted))", margin: "16px 0 8px" }}>
+            App Info
+          </p>
+          <div style={{ padding: "12px", borderRadius: 12, background: "oklch(var(--ai-surface))" }}>
+            <p style={{ margin: "0 0 4px", fontSize: 14, color: "oklch(var(--ai-text))", fontWeight: 600 }}>TSN AI Assistant</p>
+            <p style={{ margin: "0 0 4px", fontSize: 12, color: "oklch(var(--ai-muted))" }}>Version 1.0.0</p>
+            <p style={{ margin: 0, fontSize: 12, color: "oklch(var(--ai-muted))" }}>Built on Internet Computer Protocol</p>
           </div>
 
-          {!isLoggedIn ? (
-            <button
-              type="button"
-              onClick={login}
-              disabled={isLoggingIn || isInitializing}
-              className="mt-4 w-full py-3 rounded-xl font-heading font-bold text-sm tracking-wide text-white flex items-center justify-center gap-2 transition-all"
-              style={{ background: "linear-gradient(135deg, #1d4ed8, #0ea5e9)" }}
-            >
-              <LogIn size={16} />
-              {isLoggingIn ? "Logging in…" : "Login with Internet Identity"}
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={clear}
-              className="mt-4 w-full py-2.5 rounded-xl font-heading font-bold text-sm tracking-wide text-red-400 flex items-center justify-center gap-2 transition-all border border-red-500/30 bg-red-500/5 hover:bg-red-500/10"
-            >
-              <LogOut size={16} />
-              Logout
-            </button>
-          )}
-        </div>
-
-        {/* Theme Toggle */}
-        <Section title="Appearance">
-          <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-sport-surface">
-            <div className="flex items-center gap-3">
-              {isDark ? <Moon size={18} className="text-blue-400" /> : <Sun size={18} className="text-yellow-400" />}
-              <div>
-                <p className="text-sm font-heading font-semibold text-sport-text">
-                  {isDark ? "Dark Mode" : "Light Mode"}
-                </p>
-                <p className="text-xs text-sport-muted">Toggle app theme</p>
-              </div>
-            </div>
-            <Switch
-              checked={isDark}
-              onCheckedChange={onThemeToggle}
-              id="theme-toggle"
-            />
-          </div>
-        </Section>
-
-        {/* Notifications */}
-        <Section title="Notifications">
-          <div className="space-y-2">
-            <NotifRow
-              icon={<Bell size={16} className="text-red-400" />}
-              label="Live Match Alerts"
-              checked={notifMatchAlerts}
-              onChange={setNotifMatchAlerts}
-            />
-            <NotifRow
-              icon={<span className="text-base">📊</span>}
-              label="Score Updates"
-              checked={notifScoreUpdates}
-              onChange={setNotifScoreUpdates}
-            />
-            <NotifRow
-              icon={<span className="text-base">🤖</span>}
-              label="AI Predictions"
-              checked={notifPredictions}
-              onChange={setNotifPredictions}
-            />
-          </div>
-        </Section>
-
-        {/* Favorite Sport */}
-        <Section title="Favorite Sport">
-          <div className="flex flex-wrap gap-2 pt-1">
-            {ALL_SPORTS.map((sport: Sport) => (
-              <span
-                key={sport}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-heading font-semibold border border-sport-border text-sport-muted bg-sport-surface"
-              >
-                {getSportIcon(sport)} {getSportLabel(sport)}
-              </span>
-            ))}
-          </div>
-        </Section>
-
-        {/* Player Analytics */}
-        {players.length > 0 && (
-          <Section title="Player Analytics">
-            <div className="mb-3">
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {players.slice(0, 8).map((player) => (
-                  <button
-                    key={player.id}
-                    type="button"
-                    onClick={() => setSelectedPlayerId(selectedPlayerId === player.id ? null : player.id)}
-                    className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-heading font-semibold transition-all"
-                    style={
-                      selectedPlayerId === player.id
-                        ? { background: "linear-gradient(135deg, #1d4ed8, #0ea5e9)", color: "white", border: "1px solid #3b82f660" }
-                        : { backgroundColor: "oklch(var(--sport-card))", border: "1px solid oklch(var(--sport-border))", color: "oklch(var(--sport-muted))" }
-                    }
-                  >
-                    <BarChart2 size={12} />
-                    {player.name.split(" ")[0]}
-                  </button>
-                ))}
-              </div>
-            </div>
-            {selectedPlayer && <PlayerAnalytics player={selectedPlayer} />}
-            {!selectedPlayer && (
-              <div className="text-center py-4 text-sport-muted text-sm font-heading">
-                Tap a player to see analytics
-              </div>
-            )}
-          </Section>
-        )}
-
-        {/* Admin Panel Button */}
-        {isAdmin && (
           <button
             type="button"
-            onClick={() => setAdminOpen(true)}
-            className="w-full flex items-center justify-between p-4 rounded-xl transition-all"
             style={{
-              background: "linear-gradient(135deg, oklch(0.15 0.08 55), oklch(0.18 0.1 45))",
-              border: "1px solid oklch(0.3 0.08 50)",
+              marginTop: 8,
+              padding: "10px 14px",
+              borderRadius: 10,
+              border: "1px solid oklch(var(--ai-border))",
+              background: "transparent",
+              color: "oklch(0.58 0.22 254)",
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: "pointer",
             }}
           >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-yellow-500/20 flex items-center justify-center">
-                <Shield size={18} className="text-yellow-400" />
-              </div>
-              <div className="text-left">
-                <p className="font-heading font-black text-sm text-yellow-400">Admin Panel</p>
-                <p className="text-xs text-yellow-600">Manage matches, news, players</p>
-              </div>
-            </div>
-            <ChevronRight size={18} className="text-yellow-600" />
+            Contact Support
           </button>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+export function ProfileTab({ isDark, onThemeToggle, onLogout }: ProfileTabProps) {
+  const { identity, clear } = useInternetIdentity();
+  const { actor } = useActor();
+  const [msgCount, setMsgCount] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
+  const [userName, setUserName] = useState("User");
+
+  useEffect(() => {
+    if (!actor) return;
+    void (async () => {
+      try {
+        const [count, profile] = await Promise.all([
+          actor.getCallerMessageCount(),
+          actor.getCallerUserProfile(),
+        ]);
+        setMsgCount(Number(count));
+        if (profile?.name) setUserName(profile.name);
+      } catch {
+        // ignore
+      }
+    })();
+  }, [actor]);
+
+  const principal = identity?.getPrincipal().toString();
+  const initials = userName.slice(0, 2).toUpperCase();
+  const isPremium = false; // placeholder
+
+  const menuItems = [
+    {
+      icon: Settings,
+      label: "Settings",
+      color: "oklch(0.58 0.22 254)",
+      action: () => setShowSettings(true),
+    },
+    {
+      icon: isDark ? Sun : Moon,
+      label: isDark ? "Switch to Light Mode" : "Switch to Dark Mode",
+      color: "oklch(0.68 0.18 200)",
+      action: onThemeToggle,
+    },
+    {
+      icon: Bell,
+      label: "Notifications",
+      color: "oklch(0.65 0.18 55)",
+      action: () => {},
+    },
+    {
+      icon: Info,
+      label: "About TSN AI",
+      color: "oklch(0.55 0.18 145)",
+      action: () => {},
+    },
+    {
+      icon: LogOut,
+      label: "Logout",
+      color: "oklch(0.59 0.24 27)",
+      action: () => {
+        clear();
+        onLogout();
+      },
+    },
+  ];
+
+  return (
+    <div className="page-fade" style={{ paddingBottom: 8 }}>
+      {/* Header */}
+      <div
+        style={{
+          padding: "20px 20px 24px",
+          background: "linear-gradient(180deg, oklch(0.10 0.025 254 / 0.8) 0%, transparent 100%)",
+          textAlign: "center",
+        }}
+      >
+        {/* Avatar */}
+        <div
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, oklch(0.58 0.22 254), oklch(0.5 0.2 254))",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto 12px",
+            boxShadow: "0 0 24px oklch(0.58 0.22 254 / 0.4)",
+            fontSize: 28,
+            fontFamily: "'Rajdhani', sans-serif",
+            fontWeight: 700,
+            color: "oklch(0.98 0 0)",
+          }}
+        >
+          {initials}
+        </div>
+
+        <h2
+          style={{
+            margin: "0 0 4px",
+            fontFamily: "'Rajdhani', sans-serif",
+            fontSize: 22,
+            fontWeight: 700,
+            color: "oklch(var(--ai-text))",
+          }}
+        >
+          {userName}
+        </h2>
+        {principal && (
+          <p style={{ margin: "0 0 10px", fontSize: 11, color: "oklch(var(--ai-muted))" }}>
+            {principal.slice(0, 20)}...
+          </p>
         )}
 
-        {/* Footer */}
-        <div className="text-center py-4 text-sport-muted text-xs">
-          <p>TSN Sports AI Pro v1.0</p>
-          <p className="mt-1">
-            © 2026. Built with ❤️ using{" "}
-            <a
-              href="https://caffeine.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              caffeine.ai
-            </a>
-          </p>
+        {/* Plan Badge */}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            padding: "4px 12px",
+            borderRadius: 99,
+            background: isPremium
+              ? "linear-gradient(135deg, oklch(0.65 0.18 55 / 0.3), oklch(0.72 0.18 55 / 0.2))"
+              : "oklch(var(--ai-surface))",
+            border: isPremium
+              ? "1px solid oklch(0.65 0.18 55 / 0.4)"
+              : "1px solid oklch(var(--ai-border))",
+          }}
+        >
+          <Star
+            size={12}
+            style={{ color: isPremium ? "oklch(0.72 0.18 55)" : "oklch(var(--ai-muted))" }}
+          />
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: isPremium ? "oklch(0.72 0.18 55)" : "oklch(var(--ai-muted))",
+            }}
+          >
+            {isPremium ? "Premium Member" : "Free Plan"}
+          </span>
         </div>
       </div>
 
-      {/* Admin Panel Modal */}
-      {adminOpen && <AdminPanel onClose={() => setAdminOpen(false)} />}
-    </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <p className="text-xs font-heading font-black text-sport-muted uppercase tracking-widest mb-2 px-1">
-        {title}
-      </p>
-      {children}
-    </div>
-  );
-}
-
-function NotifRow({
-  icon,
-  label,
-  checked,
-  onChange,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  const id = `notif-${label.toLowerCase().replace(/\s/g, "-")}`;
-  return (
-    <div className="flex items-center justify-between py-2.5 px-4 rounded-xl bg-sport-surface">
-      <div className="flex items-center gap-3">
-        {icon}
-        <Label htmlFor={id} className="text-sm font-heading font-semibold text-sport-text cursor-pointer">
-          {label}
-        </Label>
+      {/* Stats */}
+      <div style={{ padding: "0 16px 16px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: 10,
+          }}
+        >
+          {[
+            { icon: MessageSquare, value: String(msgCount || 0), label: "Messages", color: "oklch(0.58 0.22 254)" },
+            { icon: Wrench, value: "8", label: "Tools Used", color: "oklch(0.68 0.18 200)" },
+            { icon: Flame, value: "7", label: "Day Streak", color: "oklch(0.65 0.18 55)" },
+          ].map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={stat.label}
+                style={{
+                  borderRadius: 14,
+                  background: "oklch(var(--ai-card))",
+                  border: "1px solid oklch(var(--ai-border))",
+                  padding: "14px 10px",
+                  textAlign: "center",
+                }}
+              >
+                <Icon size={20} style={{ color: stat.color, margin: "0 auto 6px", display: "block" }} />
+                <p
+                  style={{
+                    margin: "0 0 2px",
+                    fontFamily: "'Space Mono', monospace",
+                    fontSize: 18,
+                    fontWeight: 700,
+                    color: "oklch(var(--ai-text))",
+                  }}
+                >
+                  {stat.value}
+                </p>
+                <p style={{ margin: 0, fontSize: 10, color: "oklch(var(--ai-muted))" }}>{stat.label}</p>
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <Switch id={id} checked={checked} onCheckedChange={onChange} />
+
+      {/* Menu Items */}
+      <div style={{ padding: "0 16px 16px" }}>
+        <div
+          style={{
+            background: "oklch(var(--ai-card))",
+            borderRadius: 16,
+            border: "1px solid oklch(var(--ai-border))",
+            overflow: "hidden",
+          }}
+        >
+          {menuItems.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={item.action}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "15px 16px",
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: i < menuItems.length - 1 ? "1px solid oklch(var(--ai-border))" : "none",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  color: item.label === "Logout" ? "oklch(0.59 0.24 27)" : "oklch(var(--ai-text))",
+                }}
+              >
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 10,
+                    background: `${item.color} / 0.12`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon size={18} style={{ color: item.color }} />
+                </div>
+                <span
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 500,
+                    flex: 1,
+                  }}
+                >
+                  {item.label}
+                </span>
+                {item.label !== "Logout" && (
+                  <span style={{ fontSize: 18, color: "oklch(var(--ai-muted))" }}>›</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Premium Upgrade Card */}
+      {!isPremium && (
+        <div style={{ padding: "0 16px 24px" }}>
+          <div
+            style={{
+              borderRadius: 20,
+              background: "linear-gradient(135deg, oklch(0.16 0.04 254), oklch(0.12 0.03 254))",
+              border: "1px solid oklch(0.58 0.22 254 / 0.3)",
+              padding: "20px",
+              position: "relative",
+              overflow: "hidden",
+              boxShadow: "0 8px 32px oklch(0.58 0.22 254 / 0.15)",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: -30,
+                right: -30,
+                width: 120,
+                height: 120,
+                borderRadius: "50%",
+                background: "radial-gradient(circle, oklch(0.58 0.22 254 / 0.15), transparent)",
+              }}
+            />
+
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <Zap size={18} style={{ color: "oklch(0.72 0.18 55)" }} />
+              <h3
+                style={{
+                  margin: 0,
+                  fontFamily: "'Rajdhani', sans-serif",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: "oklch(0.95 0.01 250)",
+                }}
+              >
+                Unlock All Features
+              </h3>
+            </div>
+
+            <ul style={{ margin: "0 0 16px", padding: "0 0 0 4px", listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
+              {[
+                "🔍 Advanced image analysis",
+                "📊 Real-time stock signals",
+                "🤖 GPT-4 powered responses",
+                "📱 Priority support",
+              ].map((perk) => (
+                <li key={perk} style={{ fontSize: 13, color: "oklch(0.8 0.05 255)", display: "flex", gap: 8 }}>
+                  <Shield size={14} style={{ color: "oklch(0.68 0.18 200)", flexShrink: 0, marginTop: 1 }} />
+                  <span>{perk.slice(2)}</span>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              type="button"
+              style={{
+                width: "100%",
+                padding: "13px 0",
+                borderRadius: 12,
+                border: "none",
+                cursor: "pointer",
+                background: "linear-gradient(135deg, oklch(0.65 0.18 55), oklch(0.58 0.16 55))",
+                color: "oklch(0.1 0.02 55)",
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 700,
+                fontSize: 15,
+                boxShadow: "0 4px 16px oklch(0.65 0.18 55 / 0.35)",
+              }}
+            >
+              Upgrade Now — $4.99/mo
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showSettings && (
+        <SettingsSheet
+          onClose={() => setShowSettings(false)}
+          isDark={isDark}
+          onThemeToggle={onThemeToggle}
+        />
+      )}
     </div>
   );
 }

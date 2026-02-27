@@ -105,6 +105,13 @@ export interface MatchSummary {
     matchId: string;
     keyMoments: string;
 }
+export interface PlayerStats {
+    recentForm: Array<bigint>;
+    average: number;
+    matchesPlayed: bigint;
+    runsGoalsPoints: bigint;
+}
+export type Time = bigint;
 export interface FantasySuggestion {
     captainName: string;
     viceCaptainId: string;
@@ -115,7 +122,6 @@ export interface FantasySuggestion {
     suggestedPlayers: Array<[string, string]>;
     captainId: string;
 }
-export type Time = bigint;
 export interface Match {
     id: string;
     status: MatchStatus;
@@ -154,16 +160,23 @@ export interface NewsArticle {
     sport: Sport;
     imageUrl: string;
 }
+export interface ChatMessage {
+    id: string;
+    content: string;
+    role: string;
+    timestamp: bigint;
+    toolUsed: string;
+}
 export interface UserProfile {
     favoriteSport?: Sport;
     name: string;
     favoriteTeam?: string;
 }
-export interface PlayerStats {
-    recentForm: Array<bigint>;
-    average: number;
-    matchesPlayed: bigint;
-    runsGoalsPoints: bigint;
+export interface MotivationalQuote {
+    id: string;
+    quoteText: string;
+    author: string;
+    category: string;
 }
 export enum MatchStatus {
     upcoming = "upcoming",
@@ -189,7 +202,9 @@ export enum UserRole {
 }
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
+    addQuote(quote: MotivationalQuote): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    clearChatHistory(): Promise<void>;
     createFantasySuggestion(suggestion: FantasySuggestion): Promise<void>;
     createMatch(match: Match): Promise<void>;
     createNews(article: NewsArticle): Promise<void>;
@@ -202,8 +217,11 @@ export interface backendInterface {
     getAllMatches(): Promise<Array<Match>>;
     getAllNews(): Promise<Array<NewsArticle>>;
     getAllPlayers(): Promise<Array<Player>>;
+    getAllQuotes(): Promise<Array<MotivationalQuote>>;
+    getCallerMessageCount(): Promise<bigint>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getChatHistory(): Promise<Array<ChatMessage>>;
     getFantasySuggestionByMatchId(matchId: string): Promise<FantasySuggestion | null>;
     getMatchesBySport(sport: Sport): Promise<Array<Match>>;
     getMatchesByStatus(status: MatchStatus): Promise<Array<Match>>;
@@ -215,6 +233,7 @@ export interface backendInterface {
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    saveChatMessage(msg: ChatMessage): Promise<void>;
     updateFantasySuggestion(suggestion: FantasySuggestion): Promise<void>;
     updateMatch(match: Match): Promise<void>;
     updateNews(article: NewsArticle): Promise<void>;
@@ -239,6 +258,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async addQuote(arg0: MotivationalQuote): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addQuote(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addQuote(arg0);
+            return result;
+        }
+    }
     async assignCallerUserRole(arg0: Principal, arg1: UserRole): Promise<void> {
         if (this.processError) {
             try {
@@ -250,6 +283,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async clearChatHistory(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.clearChatHistory();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.clearChatHistory();
             return result;
         }
     }
@@ -421,6 +468,34 @@ export class Backend implements backendInterface {
             return from_candid_vec_n29(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getAllQuotes(): Promise<Array<MotivationalQuote>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllQuotes();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllQuotes();
+            return result;
+        }
+    }
+    async getCallerMessageCount(): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getCallerMessageCount();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getCallerMessageCount();
+            return result;
+        }
+    }
     async getCallerUserProfile(): Promise<UserProfile | null> {
         if (this.processError) {
             try {
@@ -447,6 +522,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getCallerUserRole();
             return from_candid_UserRole_n37(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getChatHistory(): Promise<Array<ChatMessage>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getChatHistory();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getChatHistory();
+            return result;
         }
     }
     async getFantasySuggestionByMatchId(arg0: string): Promise<FantasySuggestion | null> {
@@ -600,6 +689,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n49(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async saveChatMessage(arg0: ChatMessage): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.saveChatMessage(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.saveChatMessage(arg0);
             return result;
         }
     }

@@ -8,6 +8,12 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const MotivationalQuote = IDL.Record({
+  'id' : IDL.Text,
+  'quoteText' : IDL.Text,
+  'author' : IDL.Text,
+  'category' : IDL.Text,
+});
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
@@ -106,10 +112,19 @@ export const UserProfile = IDL.Record({
   'name' : IDL.Text,
   'favoriteTeam' : IDL.Opt(IDL.Text),
 });
+export const ChatMessage = IDL.Record({
+  'id' : IDL.Text,
+  'content' : IDL.Text,
+  'role' : IDL.Text,
+  'timestamp' : IDL.Int,
+  'toolUsed' : IDL.Text,
+});
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addQuote' : IDL.Func([MotivationalQuote], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'clearChatHistory' : IDL.Func([], [], []),
   'createFantasySuggestion' : IDL.Func([FantasySuggestion], [], []),
   'createMatch' : IDL.Func([Match], [], []),
   'createNews' : IDL.Func([NewsArticle], [], []),
@@ -122,8 +137,11 @@ export const idlService = IDL.Service({
   'getAllMatches' : IDL.Func([], [IDL.Vec(Match)], ['query']),
   'getAllNews' : IDL.Func([], [IDL.Vec(NewsArticle)], ['query']),
   'getAllPlayers' : IDL.Func([], [IDL.Vec(Player)], ['query']),
+  'getAllQuotes' : IDL.Func([], [IDL.Vec(MotivationalQuote)], ['query']),
+  'getCallerMessageCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getChatHistory' : IDL.Func([], [IDL.Vec(ChatMessage)], ['query']),
   'getFantasySuggestionByMatchId' : IDL.Func(
       [IDL.Text],
       [IDL.Opt(FantasySuggestion)],
@@ -151,6 +169,7 @@ export const idlService = IDL.Service({
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'saveChatMessage' : IDL.Func([ChatMessage], [], []),
   'updateFantasySuggestion' : IDL.Func([FantasySuggestion], [], []),
   'updateMatch' : IDL.Func([Match], [], []),
   'updateNews' : IDL.Func([NewsArticle], [], []),
@@ -162,6 +181,12 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const MotivationalQuote = IDL.Record({
+    'id' : IDL.Text,
+    'quoteText' : IDL.Text,
+    'author' : IDL.Text,
+    'category' : IDL.Text,
+  });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
@@ -260,10 +285,19 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'favoriteTeam' : IDL.Opt(IDL.Text),
   });
+  const ChatMessage = IDL.Record({
+    'id' : IDL.Text,
+    'content' : IDL.Text,
+    'role' : IDL.Text,
+    'timestamp' : IDL.Int,
+    'toolUsed' : IDL.Text,
+  });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addQuote' : IDL.Func([MotivationalQuote], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'clearChatHistory' : IDL.Func([], [], []),
     'createFantasySuggestion' : IDL.Func([FantasySuggestion], [], []),
     'createMatch' : IDL.Func([Match], [], []),
     'createNews' : IDL.Func([NewsArticle], [], []),
@@ -276,8 +310,11 @@ export const idlFactory = ({ IDL }) => {
     'getAllMatches' : IDL.Func([], [IDL.Vec(Match)], ['query']),
     'getAllNews' : IDL.Func([], [IDL.Vec(NewsArticle)], ['query']),
     'getAllPlayers' : IDL.Func([], [IDL.Vec(Player)], ['query']),
+    'getAllQuotes' : IDL.Func([], [IDL.Vec(MotivationalQuote)], ['query']),
+    'getCallerMessageCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getChatHistory' : IDL.Func([], [IDL.Vec(ChatMessage)], ['query']),
     'getFantasySuggestionByMatchId' : IDL.Func(
         [IDL.Text],
         [IDL.Opt(FantasySuggestion)],
@@ -305,6 +342,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'saveChatMessage' : IDL.Func([ChatMessage], [], []),
     'updateFantasySuggestion' : IDL.Func([FantasySuggestion], [], []),
     'updateMatch' : IDL.Func([Match], [], []),
     'updateNews' : IDL.Func([NewsArticle], [], []),

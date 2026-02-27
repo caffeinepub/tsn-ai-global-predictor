@@ -10,6 +10,13 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface ChatMessage {
+  'id' : string,
+  'content' : string,
+  'role' : string,
+  'timestamp' : bigint,
+  'toolUsed' : string,
+}
 export interface FantasySuggestion {
   'captainName' : string,
   'viceCaptainId' : string,
@@ -49,6 +56,12 @@ export interface MatchSummary {
   'summary' : string,
   'matchId' : string,
   'keyMoments' : string,
+}
+export interface MotivationalQuote {
+  'id' : string,
+  'quoteText' : string,
+  'author' : string,
+  'category' : string,
 }
 export interface NewsArticle {
   'id' : string,
@@ -102,7 +115,9 @@ export type UserRole = { 'admin' : null } |
   { 'guest' : null };
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addQuote' : ActorMethod<[MotivationalQuote], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'clearChatHistory' : ActorMethod<[], undefined>,
   'createFantasySuggestion' : ActorMethod<[FantasySuggestion], undefined>,
   'createMatch' : ActorMethod<[Match], undefined>,
   'createNews' : ActorMethod<[NewsArticle], undefined>,
@@ -115,8 +130,11 @@ export interface _SERVICE {
   'getAllMatches' : ActorMethod<[], Array<Match>>,
   'getAllNews' : ActorMethod<[], Array<NewsArticle>>,
   'getAllPlayers' : ActorMethod<[], Array<Player>>,
+  'getAllQuotes' : ActorMethod<[], Array<MotivationalQuote>>,
+  'getCallerMessageCount' : ActorMethod<[], bigint>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getChatHistory' : ActorMethod<[], Array<ChatMessage>>,
   'getFantasySuggestionByMatchId' : ActorMethod<
     [string],
     [] | [FantasySuggestion]
@@ -131,6 +149,7 @@ export interface _SERVICE {
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'saveChatMessage' : ActorMethod<[ChatMessage], undefined>,
   'updateFantasySuggestion' : ActorMethod<[FantasySuggestion], undefined>,
   'updateMatch' : ActorMethod<[Match], undefined>,
   'updateNews' : ActorMethod<[NewsArticle], undefined>,
